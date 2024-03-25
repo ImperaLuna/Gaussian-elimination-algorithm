@@ -165,7 +165,7 @@ def run():
         print("Solutions:")
         for i, solution in enumerate(solutions):
             print(f"x{i + 1} = {solution}")
-    elif result == "Undetermine":
+    elif result == "Undetermined":
         print(separator)
         print("System is undetermined. Matrix after Gaussian elimination:")
         print(solution_matrix)
