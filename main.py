@@ -1,6 +1,9 @@
 import numpy as np
+import sys
 
+from test_cases import *
 
+separator = f"<{50 * '='}>"
 def determine_system_size() -> tuple[int, int]:
     """
     Determine the matrix size of the system.
@@ -104,9 +107,49 @@ def gaussian_elimination(numpy_matrix: np.ndarray) -> tuple[str, np.ndarray]:
 
     return "Consistent with a unique solution", numpy_matrix
 
+def get_test_case(test_case_choice):
+    """
+    Returns the test case data based on the user's choice.
 
-def main():
-    separator = f"<{50 * '='}>"
+    :param test_case_choice: The test case choice (1-4)
+    :return: The NumPy matrix for the chosen test case
+    """
+    if test_case_choice == 1:
+        return test_case_1
+    elif test_case_choice == 2:
+        return test_case_2
+    elif test_case_choice == 3:
+        return test_case_3
+    elif test_case_choice == 4:
+        return test_case_4
+    else:
+        raise ValueError("Invalid test case choice")
+
+
+def run_test_case(numpy_matrix):
+    print(separator)
+    print_equation(numpy_matrix)
+    print(separator)
+    print(f"Matrix before operations:\n{numpy_matrix}")
+
+    result, solution_matrix = gaussian_elimination(numpy_matrix)
+    print(separator)
+    print(f"Result: {result}")
+    if result == "Consistent with a unique solution":
+        solutions = solve_variables(solution_matrix)
+        print("Solutions:")
+        for i, solution in enumerate(solutions):
+            print(f"x{i + 1} = {solution}")
+    elif result == "Undetermined":
+        print(separator)
+        print("System is undetermined. Matrix after Gaussian elimination:")
+        print(solution_matrix)
+
+def run():
+    """
+    Run the program
+    :return:
+    """
     num_equations, num_variables = determine_system_size()
     numpy_matrix = matrix_input(num_equations, num_variables)
     print(separator)
@@ -126,6 +169,24 @@ def main():
         print(separator)
         print("System is undetermined. Matrix after Gaussian elimination:")
         print(solution_matrix)
+
+
+def main():
+    if "--run_tests" in sys.argv:
+        print("Choose a test case (1-4):")
+        for i in range(1, 5):
+            print(f"{i}. Test case {i}")
+        test_case_choice = int(input("Enter your choice: "))
+
+        if 1 <= test_case_choice <= 4:
+            numpy_matrix = get_test_case(test_case_choice)
+            run_test_case(numpy_matrix)
+
+        else:
+            print("Invalid choice. Exiting.")
+            return
+    else:
+        run()
 
 
 if __name__ == "__main__":
